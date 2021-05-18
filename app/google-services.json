@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "954049732377",
+    "project_id": "busdriverapp-258fb",
+    "storage_bucket": "busdriverapp-258fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:954049732377:android:e9ad168213c3c454626f88",
+        "android_client_info": {
+          "package_name": "com.example.busdriverapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "954049732377-e12bbo6nksnejjlorsdtgnp8u384g1i0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOCqnfP7KIDoO8_jILC8H7dAbfglOarXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "954049732377-e12bbo6nksnejjlorsdtgnp8u384g1i0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BusDriverApp</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_phone">Mobile</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="button_login">Login</string>
+    <string name="button_register">Register</string>
+    <string name="hint_enter_name">Enter Full Name</string>
+    <string name="title_activity_live_location">Map</string>
+</resources>
