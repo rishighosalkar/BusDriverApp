@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -103,10 +105,42 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         progressDialog.setMessage("Registering User...");
         progressDialog.show();
 
-        // Create user with email and password
+        //Database Helper instance
         UserHelper userHelper = new UserHelper(username, email, phone, password);
 
-        databaseReference.child(username).setValue(userHelper).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        // Create user with email and password
+        firebaseAuth.createUserWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task){
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()){
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        // Successfully registered user, please verify through user email
+                                        Toast.makeText(context, "Please check email for verification.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(context, task.getException().getMessage() , Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            databaseReference.child(username).setValue(userHelper);
+                            finish();
+                            // Redirect to login activity
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this,"Could not registered ... Please try again",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+        /*databaseReference.child(username).setValue(userHelper).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 progressDialog.dismiss();
@@ -120,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(RegisterActivity.this,"Could not registered ... Please try again",Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
     }
 
     @Override

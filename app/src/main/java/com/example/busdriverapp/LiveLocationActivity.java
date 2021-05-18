@@ -49,6 +49,7 @@ public class LiveLocationActivity extends FragmentActivity implements OnMapReady
             public void onLocationChanged(Location location) {
                 Toast.makeText(LiveLocationActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
                 Log.i("Location", location.toString());
+                //location.latitude and location.longitude
             }
 
             @Override

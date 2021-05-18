@@ -29,17 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();
+        /*firebaseUser = firebaseAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();*/
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         textView = (TextView) findViewById(R.id.logout);
 
-        /*if (firebaseAuth.getCurrentUser() == null) {
+        if (firebaseAuth.getCurrentUser() == null) {
             finish();
             startActivity(new Intent(this, LoginActivity.class));
-        }*/
+        }
         Toast.makeText(this, "HIIII", Toast.LENGTH_SHORT).show();
     }
 

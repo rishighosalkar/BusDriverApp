@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,11 +63,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void userLogin(){
-        String username = editTextEmail.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
         String password  = editTextPassword.getText().toString().trim();
 
         // If email is empty, return
-        if (TextUtils.isEmpty(username)){
+        if (TextUtils.isEmpty(email)){//change email to username if the code is changed
             Toast.makeText(this,"Please enter email",Toast.LENGTH_LONG).show();
             return;
         }
@@ -80,9 +82,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog.setMessage("Logging Please Wait...");
         progressDialog.show();
 
-        Query checkUser = databaseReference.orderByChild("username").equalTo(username);
+        //Query checkUser = databaseReference.orderByChild("username").equalTo(username);
 
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        /*checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -108,9 +110,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         // Sign in with email and password
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        if (task.isSuccessful()){
+                            // If email is not verified, verify
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (!user.isEmailVerified()){
+                                Toast.makeText(LoginActivity.this, "Please Verify email.",Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                // start main activity
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
+                        }
+                        else {
+                            // Failed to log in
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
