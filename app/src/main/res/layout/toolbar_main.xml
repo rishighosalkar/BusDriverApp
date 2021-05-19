@@ -16,11 +16,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="NavBar"
+        android:text="@string/app_name"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAlignment="center"
-        android:textColor="#636363" />
+        android:textColor="#636363"
+        android:textAppearance="@style/TextAppearance.BusDriverApp.Title" />
 
     <ImageView
         android:layout_width="wrap_content"

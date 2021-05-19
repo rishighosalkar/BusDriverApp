@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ClickLogout(View view){
-
+        FirebaseAuth.getInstance().signOut();
     }
 
     public void ClickLiveLocation(View view){
-        redirectActivity(this, LiveLocationActivity.class);
+        redirectActivity(this, GoLive.class);
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
