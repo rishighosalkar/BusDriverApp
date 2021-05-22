@@ -1,20 +1,26 @@
 package com.example.busdriverapp;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.busdriverapp.Classes.LocationHelper;
 import com.example.busdriverapp.databinding.ActivityLiveLocationBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,6 +28,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class LiveLocationActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -30,13 +41,39 @@ public class LiveLocationActivity extends FragmentActivity implements OnMapReady
     private ActivityLiveLocationBinding binding;
     LocationManager locationManager;
     LocationListener locationListener;
+    Bundle extras;
+    String bus_no;
+    DatabaseReference databaseReference, cReference;
+    FirebaseDatabase firebaseDatabase;
+    FirebaseAuth firebaseAuth;
+    Task<Void> childReference;
+    SharedPreferences sharedPreferences;
+    String username;
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityLiveLocationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        if(sharedPreferences != null)
+        {
+            username = sharedPreferences.getString("username", null);
+        }
+        cReference = firebaseDatabase.getReference("Location");
+        //cReference.child(name).setValue(locationHelper);
+
+        extras = getIntent().getExtras();
+        if(extras != null)
+        {
+            bus_no = extras.getString("Bus No");
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -49,7 +86,36 @@ public class LiveLocationActivity extends FragmentActivity implements OnMapReady
             public void onLocationChanged(Location location) {
                 Toast.makeText(LiveLocationActivity.this, location.toString(), Toast.LENGTH_SHORT).show();
                 Log.i("Location", location.toString());
+                String lat = String.valueOf(location.getLatitude());
+                String lon = String.valueOf(location.getLongitude());
+                Log.i("Latitude", lat);
+                Log.i("Latitude", lon);
                 //location.latitude and location.longitude
+                LocationHelper locationHelper = new LocationHelper(
+                        location.getLatitude(),
+                        location.getLongitude(),
+                        bus_no
+                );
+
+
+                databaseReference = firebaseDatabase.getReference("Location");
+                //databaseReference.child(username).setValue(locationHelper);
+
+
+                childReference=databaseReference.child(username)
+                        .setValue(locationHelper).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.i("Username is", username);
+                                    Toast.makeText(LiveLocationActivity.this, "Location saved", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    Toast.makeText(LiveLocationActivity.this, "Location not saved", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
             }
 
             @Override

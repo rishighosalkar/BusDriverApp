@@ -18,7 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,6 +37,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText editTextEmail, editTextPassword;
     private Button buttonSignin;
 
+    SharedPreferences sharedPreferences;
+    String username;
+
     private ProgressDialog progressDialog;
 
     private Context context = this;
@@ -45,6 +50,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        if(sharedPreferences != null)
+        {
+            username = sharedPreferences.getString("username", null);
+        }
 
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -127,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             else{
                                 // start main activity
                                 finish();
+                                sharedPreferences.edit().putString("username", username).commit();
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }
                         }

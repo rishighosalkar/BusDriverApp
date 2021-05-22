@@ -14,7 +14,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    SharedPreferences sharedPreferences;
 
     private ProgressDialog progressDialog;
 
@@ -57,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextConfirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         progressDialog = new ProgressDialog(this);
 
@@ -131,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             databaseReference.child(username).setValue(userHelper);
                             finish();
                             // Redirect to login activity
+                            sharedPreferences.edit().putString("username", username).commit();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         }
                         else {

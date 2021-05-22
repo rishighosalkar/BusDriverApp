@@ -6,7 +6,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     DrawerLayout drawerLayout;
     public static TextView textView;
+    SharedPreferences sharedPreferences;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         /*firebaseUser = firebaseAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();*/
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        if(sharedPreferences != null)
+        {
+            username = sharedPreferences.getString("username", null);
+        }
+        //Log.i("Username", username);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         textView = (TextView) findViewById(R.id.logout);
 
@@ -65,11 +77,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ClickLogout(View view){
+
         FirebaseAuth.getInstance().signOut();
+        TextView textView = (TextView) findViewById(R.id.logout);
+        textView.setText("Login");
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     public void ClickLiveLocation(View view){
-        redirectActivity(this, GoLive.class);
+
+        Intent intent = new Intent(getBaseContext(), GoLive.class);
+        sharedPreferences.edit().putString("username", username).commit();
+        startActivity(intent);
+        //redirectActivity(this, GoLive.class);
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
@@ -79,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
     }
+
 
     @Override
     protected void onPause() {

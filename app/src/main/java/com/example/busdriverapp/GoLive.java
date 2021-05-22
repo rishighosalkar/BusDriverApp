@@ -10,12 +10,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -29,12 +31,22 @@ public class GoLive extends AppCompatActivity {
     LocationListener locationListener;
     DrawerLayout drawerLayout;
 
+    SharedPreferences sharedPreferences;
+    String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_go_live);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        if(sharedPreferences != null)
+        {
+            username = sharedPreferences.getString("username", null);
+        }
     }
 
     public void ClickMenu(View view)
@@ -75,7 +87,11 @@ public class GoLive extends AppCompatActivity {
         textInputEditText.setFocusable(true);
         textInputEditText.setFocusableInTouchMode(true);
         textInputEditText.setInputType(0);
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        Intent intent = new Intent(getBaseContext(), LiveLocationActivity.class);
+        intent.putExtra("Bus No", textInputEditText.getText().toString());
+        sharedPreferences.edit().putString("username", username);
+        startActivity(intent);
+        /*locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -113,7 +129,7 @@ public class GoLive extends AppCompatActivity {
                 Log.i("Permission", "Permission Granted");
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             }
-        }
+        }*/
 
     }
 
