@@ -87,7 +87,7 @@ public class GoLive extends AppCompatActivity {
         textInputEditText.setFocusable(true);
         textInputEditText.setFocusableInTouchMode(true);
         textInputEditText.setInputType(0);
-        Intent intent = new Intent(getBaseContext(), LiveLocationActivity.class);
+        Intent intent = new Intent(getBaseContext(), MapsActivity.class);
         intent.putExtra("Bus No", textInputEditText.getText().toString());
         sharedPreferences.edit().putString("username", username);
         startActivity(intent);
