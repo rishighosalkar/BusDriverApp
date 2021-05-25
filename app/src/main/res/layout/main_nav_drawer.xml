@@ -77,5 +77,23 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:onClick="ClickGeofence">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Geofence"
+            android:id="@+id/Geofence"
+            android:padding="12dp"
+            android:layout_marginStart="16dp" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

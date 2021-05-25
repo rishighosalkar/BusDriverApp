@@ -31,8 +31,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".Geofence.GeofenceActivity"
+            android:label="@string/title_activity_geofence"></activity>
+        <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
         <activity android:name=".GoLive" />
         <activity
             android:name=".LiveLocationActivity"

@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.busdriverapp.Geofence.GeofenceActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -78,9 +79,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void ClickLogout(View view){
 
-        FirebaseAuth.getInstance().signOut();
+        //FirebaseAuth.getInstance().signOut();
         TextView textView = (TextView) findViewById(R.id.logout);
         textView.setText("Login");
+        firebaseAuth.signOut();
+        finish();
         startActivity(new Intent(this, LoginActivity.class));
     }
 
@@ -90,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.edit().putString("username", username).commit();
         startActivity(intent);
         //redirectActivity(this, GoLive.class);
+    }
+
+    public void ClickGeofence(View view){
+        redirectActivity(this, GeofenceActivity.class);
     }
 
     public static void redirectActivity(Activity activity, Class aClass) {
